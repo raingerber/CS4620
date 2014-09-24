@@ -8,6 +8,7 @@ should print out the word "Bobby"
 
 
 void main() {
+	Person bobby;
 	bobby = New(Student);
 	bobby.setName("Bobby");
 	Print(bobby.getName());
