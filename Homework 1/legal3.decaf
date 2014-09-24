@@ -1,0 +1,26 @@
+/*
+user inputs 10 numbers
+output is the sum of those numbers
+if a specific input is not a valid number, it counts as zero
+*/
+
+
+
+
+void main() {
+	int sum;
+	int counter;
+	int [] numArray;
+	sum = 0;
+	counter = 0;
+	numArray = NewArray(10, int);
+	for (;counter < numArray.length();) {
+		numArray[counter] = ReadInteger();
+		counter = counter + 1;
+	}
+	for (counter = 0; counter < numArray.length(); counter = counter + 1) {
+		sum = sum + numArray[counter];
+	}
+	Print(sum);
+	return;
+}

@@ -1,0 +1,25 @@
+/*
+input is taken from readline()
+the input becomes output if it does not equal "quit" (case sensitive)
+it loops until the input is "quit"
+*/
+
+
+
+
+void main() {
+	loopFunction();
+	void loopFunction() {
+		string my_string;
+		my_string = "this will not be printed";
+		while (true == true) {
+			my_string = ReadLine();
+			if (my_string != "quit") {
+				Print("Repeating the loop!");
+			} else {
+				break;
+			}
+		}
+	}
+	return;
+}
