@@ -1,0 +1,32 @@
+/*
+no input.
+should print out the word "Bobby"
+*/
+
+
+
+
+
+void main() {
+	Person bobby;
+	bobby = New(Student);
+	bobby.setName("Bobby");
+	Print(bobby.getName());
+}
+
+interface Person {
+	string getName();
+	void setName(string input);
+}
+
+class Student implements Person {
+	int name;
+	name = "undefined";
+	string getName() {
+		return name;
+	}
+	void setName(string input) {
+		name = input;
+		return;
+	}
+}

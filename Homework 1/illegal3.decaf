@@ -1,0 +1,52 @@
+/*
+This program is trying to take a number a N and then output the Nth number in the fibonacci sequence
+It fails.
+
+nested comments in main()
+expression in the while loop (1+1) does not return a boolean
+tries to assign null to int x, which is not a named type
+return has no trailing semicolon
+tries to assign string from ReadLine to int variable
+compares variable with an int type to a string
+the final Print statement in main() tries to concatenate a string with an int
+
+fibonacci function:
+	first if is capitalized
+	if and else blocks are separated by a Print statement	
+*/
+
+
+
+
+
+void main() {
+	/* 
+	Nested can be useful when debugging code.&*@#_!_
+	/* However, Decaf comments can't be nested */
+	*/
+	int x;
+	int input;
+	x = null;
+	while (1 + 1) {
+		Print("coming at you from a broken loop")
+	}
+	input = ReadLine();
+	if (input < "-1") {
+		return;
+	}
+	Print("The answer is: " + fibonacci(input));
+	return;
+}
+
+int fibonacci(int n) {
+	IF (n == 0) {
+		return n;
+	}
+	if (n == 1) {
+		return n;
+	}
+	Print ("recursive call required");
+	else {
+		return fibonacci(n - 1) + fibonacci(n - 2);
+	}
+}

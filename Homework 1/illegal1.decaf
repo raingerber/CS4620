@@ -1,0 +1,46 @@
+/*
+main returns an int instead of void
+Student class tries to overrride inherited variable var
+Student class overrides setInfo, but with a different signature
+Student.getAge and Student.getName return the wrong types
+
+this is just attempt to create a class Person and then extend it with another class
+*/
+
+
+
+
+
+
+
+
+
+
+
+int main() {
+	return 0;
+}
+
+class Person {
+	string var;
+	void setInfo(string name) {
+		var = name;
+	}
+	string getInfo() {
+		return name;
+	}
+}
+class Student extends Person {
+	int var;
+	string studentName;
+	void setInfo(string name, int new_age) {
+		studentName = name;
+		var = new_age;
+	}
+	int getName() {
+		return name;
+	}
+	string getAge() {
+		return var;
+	}
+}
