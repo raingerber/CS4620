@@ -1,0 +1,5 @@
+bison -dvty parser.y
+g++ -g  -Wall -Wno-unused -Wno-sign-compare  -c -o y.tab.o y.tab.c
+flex -d scanner.l
+g++ -g  -Wall -Wno-unused -Wno-sign-compare    -c -o lex.yy.o lex.yy.c
+g++ -o dcc y.tab.o lex.yy.o  ast.o  ast_decl.o  ast_expr.o  ast_stmt.o  ast_type.o  errors.o  utility.o  main.o  -lc -lm -lfl
