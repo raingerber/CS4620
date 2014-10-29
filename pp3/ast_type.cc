@@ -64,15 +64,19 @@ void NamedType::Check(reasonT whyNeeded) {
 }
 
 void ArrayType::Check() {
-    //printf("ArrayType check   %s\n", elemType->typeName);
+    //printf("ArrayType check   %s\n", this->elemType->typeName);
     Decl *dec;
     Node *p = this;
     while ((p = p->GetParent()) != NULL) {
         if (p->localTable != NULL) {
             Iterator<Decl*> iterator = p->localTable->GetIterator();
             while ((dec = iterator.GetNextValue()) != NULL) {
-                if (strcmp(dec->getName(), this->elemType->typeName) == 0 && dynamic_cast<ClassDecl*>(dec) != NULL) {
-                    return;
+                char *var1 = dec->getName();
+                char *var2 = this->elemType->typeName;
+                if (var1 != NULL && var2 != NULL) {
+                    if (strcmp(var1, var2) == 0 && dynamic_cast<ClassDecl*>(dec) != NULL) {
+                        return;
+                    }
                 }
             }
         }

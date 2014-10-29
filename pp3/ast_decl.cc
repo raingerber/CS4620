@@ -56,10 +56,10 @@ void FnDecl::SetFunctionBody(Stmt *b) {
 /*******************************************************************************************************************************************************/
 
 void CheckInParentClass(Decl* childDecl, ClassDecl* parentClass) {
-    //printf("%s %s\n", childDecl->id->name, parentClass->id->name);
+    //printf("Decl: %s, Class: %s\n", childDecl->id->name, parentClass->id->name);
     FnDecl *var1, *var2;
-    Decl *d = parentClass->localTable->Lookup(childDecl->id->name);
-    if (d != NULL && (var1 = dynamic_cast<FnDecl*>(childDecl)) != NULL && (var2 = dynamic_cast<FnDecl*>(d))) {
+    Decl *dec = parentClass->localTable->Lookup(childDecl->id->name);
+    if (dec != NULL && (var1 = dynamic_cast<FnDecl*>(childDecl)) != NULL && (var2 = dynamic_cast<FnDecl*>(dec))) {
         if (var1->formals->NumElements() == var2->formals->NumElements()) {
             for (int i = 0; i<var1->formals->NumElements(); i++) {
                 if (strcmp(var1->formals->Nth(i)->type->typeName, var2->formals->Nth(i)->type->typeName) != 0) {
@@ -67,6 +67,8 @@ void CheckInParentClass(Decl* childDecl, ClassDecl* parentClass) {
                 }
             }
         }
+    } else if (strcmp(dec->id->name, childDecl->id->name) == 0) {
+        ReportError::DeclConflict(dec, childDecl);
     }
 }
 
@@ -200,12 +202,13 @@ void ClassDecl::Check() {
         ClassDecl* parentClass;
         extends->Check(LookingForClass);                                          // could return false here if not found
         parentClass = FindParentClass(this, extends->id->name);
+        //printf("Parent Class: %s\n", parentClass->getName());
         if (parentClass != NULL) {
             for (int i = 0; i < members->NumElements(); i++) {                    // could add another function to list.h
                 FnDecl *childFn = dynamic_cast<FnDecl*>(members->Nth(i));
-                FnDecl *parentFn = dynamic_cast<FnDecl*>(parentClass->localTable->Lookup(members->Nth(i)->id->name));
+                FnDecl *parentFn = dynamic_cast<FnDecl*>(parentClass->localTable->Lookup(members->Nth(i)->getName()));
                 if (childFn != NULL && parentFn != NULL) {
-                    childFn->CheckFunctionSignatures(parentFn); // put this first
+                    childFn->CheckFunctionSignatures(parentFn);
                 }
                 members->Nth(i)->Check();
                 CheckInParentClass(members->Nth(i), parentClass);
