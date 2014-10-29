@@ -56,7 +56,7 @@ void FnDecl::SetFunctionBody(Stmt *b) {
 /*******************************************************************************************************************************************************/
 
 void CheckInParentClass(Decl* childDecl, ClassDecl* parentClass) {
-    printf("%s %s\n", childDecl->id->name, parentClass->id->name);
+    //printf("%s %s\n", childDecl->id->name, parentClass->id->name);
     Decl *d = parentClass->localTable->Lookup(childDecl->id->name);
     if (d == NULL) {
         return;
