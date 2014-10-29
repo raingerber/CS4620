@@ -83,7 +83,7 @@ void NamedType::Check(reasonT whyNeeded) {
 }
 
 void ArrayType::Check() {
-    //printf("ArrayType check   %s\n", this->elemType->typeName);
+    printf("ArrayType check %s\n", this->elemType->typeName);
     Decl *dec;
     Node *p = this;
     while ((p = p->GetParent()) != NULL) {
