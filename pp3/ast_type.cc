@@ -47,25 +47,24 @@ void Type::Check() {
     //printf("Type check %s\n", this->typeName);
 }
 
-void NamedType::Check() {
-    //printf("Named Check 1-- %s\n",this->id->name);
+void NamedType::Check() {  
     Decl *dec;
     Node *p = this;
     while ((p = p->GetParent()) != NULL) {
         if (p->localTable != NULL) {
             Iterator<Decl*> iterator = p->localTable->GetIterator();
             while ((dec = iterator.GetNextValue()) != NULL) {
-                if (strcmp(dec->getName(), this->id->name) == 0 && dynamic_cast<ClassDecl*>(dec) != NULL) {
+                if (strcmp(dec->getName(), this->id->name) == 0 && (dynamic_cast<ClassDecl*>(dec) != NULL || dynamic_cast<InterfaceDecl*>(dec) != NULL)) {
                     return;
                 }
             }
         }
     }
+    //printf("Named Check 1-- %s\n",this->id->name);
     ReportError::IdentifierNotDeclared(this->id, LookingForType);
 }
 
 void NamedType::Check(reasonT whyNeeded) {
-    //printf("Named Check 2-- %s\n",this->id->name);
     Decl *dec;
     Node *p = this;
     while ((p = p->GetParent()) != NULL) {
@@ -78,6 +77,7 @@ void NamedType::Check(reasonT whyNeeded) {
             }
         }
     }
+    //printf("Named Check 2-- %s\n",this->id->name);
     ReportError::IdentifierNotDeclared(this->id, whyNeeded);
 }
 

@@ -129,8 +129,38 @@ void ArrayAccess::Check() {
 void FieldAccess::Check() {
     //printf("FieldAccess Check\n");
     if (base) base->Check();
-    field->Check();
+    //field->Check();
+    Decl *dec, *p;
+
+    if (base == NULL) { // find 
+
+    } else { // find the identifier
+/*        p = this;
+        while ((p = p->GetParent()) != NULL) {
+            if (p->localTable != NULL) {
+                Iterator<Decl*> iterator = p->localTable->GetIterator();
+                while ((dec = iterator.GetNextValue()) != NULL) {
+                    if (strcmp(dec->getName(), this->id->name) == 0) {
+                        printf("YAHOO YAHOO YAHOO : %s\n", this->id->name);
+                    }
+                }
+            }
+        }*/
+    }
 }
+    //printf("Named Check 1-- %s\n",this->id->name);
+/*    Decl *dec;
+    Node *p = this;
+    while ((p = p->GetParent()) != NULL) {
+        if (p->localTable != NULL) {
+            Iterator<Decl*> iterator = p->localTable->GetIterator();
+            while ((dec = iterator.GetNextValue()) != NULL) {
+                if (strcmp(dec->getName(), this->id->name) == 0 && dynamic_cast<ClassDecl*>(dec) != NULL) {
+                    return;
+                }
+            }
+        }
+    }*/
 
 void Call::Check() {
     //printf("Call Check\n");

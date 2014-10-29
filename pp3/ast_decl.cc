@@ -158,12 +158,20 @@ void FnDecl::CreateTables() {
 /*******************************************************************************************************************************************************/
 
 bool FnDecl::CheckFunctionSignatures(FnDecl* otherClass) {
-    if (!(strcmp(returnType->typeName, otherClass->returnType->typeName) == 0 && formals->NumElements() == otherClass->formals->NumElements())) {
+    int f1 = formals->NumElements() || 0,   f2 = otherClass->formals->NumElements() || 0;
+    char *s1 = this->returnType->typeName;
+    char *s2 = otherClass->returnType->typeName;
+
+    if (s1 != NULL && s2 != NULL && !(strcmp(s1, s2) == 0)) { // && f1 == f2
         ReportError::OverrideMismatch(this);
         return false;
     }
+    if (formals->NumElements())
+
     for (int i = 0; i < formals->NumElements(); i++) {
-        if (strcmp(formals->Nth(i)->type->typeName, otherClass->formals->Nth(i)->type->typeName) != 0) {
+        s1 = formals->Nth(i)->type->typeName;
+        s2 = otherClass->formals->Nth(i)->type->typeName;
+        if (s1 != NULL && s2 != NULL && strcmp(s1, s2) != 0) {
             ReportError::OverrideMismatch(otherClass);
             return false;
         }
@@ -186,7 +194,7 @@ void ClassDecl::CheckInterfaceDecls(InterfaceDecl* interfaceClass) {
                     implementsAllOfIt = false;
                 }
             } else if (dynamic_cast<FnDecl*>(dec1) != NULL && dynamic_cast<FnDecl*>(dec2) != NULL) {
-                implementsAllOfIt = implementsAllOfIt && dynamic_cast<FnDecl*>(dec1)->CheckFunctionSignatures(dynamic_cast<FnDecl*>(dec2));
+                implementsAllOfIt = implementsAllOfIt && (dynamic_cast<FnDecl*>(dec1)->CheckFunctionSignatures(dynamic_cast<FnDecl*>(dec2)));
             } else {
                 ReportError::DeclConflict(dec2, dec1);
                 implementsAllOfIt = false;
