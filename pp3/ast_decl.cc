@@ -56,11 +56,12 @@ void FnDecl::SetFunctionBody(Stmt *b) {
 /*******************************************************************************************************************************************************/
 
 void CheckInParentClass(Decl* childDecl, ClassDecl* parentClass) {
+    printf("%s %s\n", childDecl->id->name, parentClass->id->name);
     Decl *d = parentClass->localTable->Lookup(childDecl->id->name);
     if (d == NULL) {
         return;
     } else {
-        ReportError::DeclConflict(childDecl, d);
+        ReportError::OverrideMismatch(childDecl);
     }
 }
 
@@ -84,6 +85,17 @@ ClassDecl* FindParentClass(ClassDecl *childNode, char *extendsName) {
     while ((dec = iterator.GetNextValue()) != NULL) {
         if (strcmp(extendsName, dec->getName()) == 0 && dynamic_cast<ClassDecl*>(dec) != NULL) {
             return dynamic_cast<ClassDecl*>(dec);
+        }
+    }
+    return NULL;
+}
+
+InterfaceDecl* FindInterface(Decl *childNode, char *extendsName) {
+    Iterator<Decl*> iterator = childNode->GetParent()->localTable->GetIterator();
+    Decl* dec;
+    while ((dec = iterator.GetNextValue()) != NULL) {
+        if (strcmp(extendsName, dec->getName()) == 0 && dynamic_cast<InterfaceDecl*>(dec) != NULL) {
+            return dynamic_cast<InterfaceDecl*>(dec);
         }
     }
     return NULL;
@@ -127,33 +139,78 @@ void FnDecl::CreateTables() {
         formals->Nth(i)->CreateTables();
     }
     //printf("1\n");
-    body->CreateTables();
+    if (body) {
+        body->CreateTables();
+    }
     //printf("2\n");
 }
 
 /*******************************************************************************************************************************************************/
 
+void FnDecl::CheckFunctionSignatures(FnDecl* otherClass) {
+    if (!(strcmp(returnType->typeName, otherClass->returnType->typeName) == 0 && formals->NumElements() == otherClass->formals->NumElements())) {
+        ReportError::OverrideMismatch(this);
+    }
+    for (int i = 0; i < formals->NumElements(); i++) {
+        if (strcmp(formals->Nth(i)->type->typeName, otherClass->formals->Nth(i)->type->typeName) != 0) {
+            ReportError::OverrideMismatch(otherClass);
+        }
+    }
+}
+
+void ClassDecl::CheckInterfaceDecls(InterfaceDecl* interfaceClass) {
+    Decl *dec1, *dec2;
+    Iterator<Decl*> iterator = interfaceClass->localTable->GetIterator();
+    while ((dec1 = iterator.GetNextValue()) != NULL) {
+        dec2 = this->localTable->Lookup(dec1->id->name);
+        if (dec2 != NULL) {
+            VarDecl *var1 = dynamic_cast<VarDecl*>(dec1);
+            VarDecl *var2 = dynamic_cast<VarDecl*>(dec2);
+            if (var1 != NULL && var2 != NULL) {
+                if (strcmp(var1->type->typeName, var2->type->typeName) != 0) {
+                    ReportError::DeclConflict(var1, var2);
+                }
+            } else if (dynamic_cast<FnDecl*>(dec1) != NULL && dynamic_cast<FnDecl*>(dec2) != NULL) {
+                dynamic_cast<FnDecl*>(dec1)->CheckFunctionSignatures(dynamic_cast<FnDecl*>(dec2));
+            } else {
+                ReportError::DeclConflict(dec2, dec1);
+            }
+        } else {
+            ReportError::InterfaceNotImplemented(this, new Type(interfaceClass->id->name));
+            break;
+        }
+    }
+}
+
 void ClassDecl::Check() {
     CheckForDeclConflict(this);
     //List<Decl*> *extendsList = new List<Decl*>;
     if (extends) {
+        ClassDecl* parentClass;
         extends->Check(LookingForClass);                                        // could return false here if not found
-        ClassDecl* parentClass = FindParentClass(this, extends->id->name);
+        parentClass = FindParentClass(this, extends->id->name);
         if (parentClass != NULL) {
-            for (int i=0; i < members->NumElements(); i++) {                    // could add another function to list.h
+            for (int i = 0; i < members->NumElements(); i++) {                    // could add another function to list.h
                 members->Nth(i)->Check();
                 CheckInParentClass(members->Nth(i), parentClass);
             }
+        }
+    } else {
+        members->CheckAll();    
+    }
+    InterfaceDecl* interfaceClass;
+    for (int i=0; i < implements->NumElements(); i++) {
+        //printf("loop %i\n",i);
+        interfaceClass = FindInterface(this, implements->Nth(i)->id->name);
+        if (interfaceClass != NULL) {
+            this->CheckInterfaceDecls(interfaceClass);
+            //printf("Interface Class %s Exists\n", interfaceClass->id->name);
+            //implements->Nth(i)->Check(LookingForInterface);
         } else {
-            members->CheckAll();
+            ReportError::IdentifierNotDeclared(implements->Nth(i)->id, LookingForInterface);
         }
     }
-    for (int i=0; i < implements->NumElements(); i++) {
-
-        //implements->Nth(i)->Check(LookingForInterface);
-
-    }
-    members->CheckAll();
+    
 }
 
 void ClassDecl::CreateTables() {
@@ -179,74 +236,8 @@ void InterfaceDecl::CreateTables() {
         CheckForDeclConflict(members->Nth(i));
     }
     for (int i=0; i < members->NumElements(); i++) {
-        //members->Nth(i)->CreateTables();
+        members->Nth(i)->CreateTables();                                             // PROBLEMATIC BEFORE
     }
 }
 
 /*******************************************************************************************************************************************************/
-
-
-
-
-
-
-/*
-void VarDecl::Check(int scopeLevel, ScopeTracker *tracker, char *parentName) { 
-    //printf("VarDecl Check\n");
-    type->Check(scopeLevel, tracker);
-    tracker->CheckForDeclConflict(scopeLevel, this->id->name, this, parentName);
-}
-
-void FnDecl::Check(int scopeLevel, ScopeTracker *tracker, char *parentName) { 
-    //printf("FnDecl Check With Parent Name\n");
-    returnType->Check(scopeLevel, tracker);
-    tracker->CheckForDeclConflict(scopeLevel, id->name, this);
-    if (formals->NumElements()==0) {
-        tracker->UpdateScope(scopeLevel+1);
-    } else {
-        formals->CheckAll(scopeLevel+1, tracker, parentName);
-    }
-    if (body) body->Check(scopeLevel+2, tracker);
-    tracker->UpdateScope(scopeLevel);
-}*/
-
-
-
-
-
-/*void ClassDecl::Check(int scopeLevel, ScopeTracker *tracker) {  // everything is collapsing, trying to make it somehow work last minute with terrible nested for loops
-    //printf("ClassDecl Check\n");
-    
-    tracker->CheckForDeclConflict(scopeLevel, id->name, this);
-    if (extends) {
-        if (tracker->extendsTable->Lookup(this->id->name)==NULL) {
-            ReportError::IdentifierNotDeclared(this->id, LookingForClass);
-        }
-        //extends->CheckExtends(scopeLevel, tracker);
-    }
-
-    //implements->CheckAll(scopeLevel, tracker);
-    for (int i=0; i<implements->NumElements(); i++) {
-        Hashtable<Decl*> *table = tracker->interfaceTable->Lookup(implements->Nth(i)->id->name);
-        if (table == NULL) {
-            i = 2000;
-        } else {
-            for (int j=0; j<members->NumElements(); j++) {
-                Decl *d = table->Lookup(members->Nth(j)->id->name);
-                if (d == NULL) {
-                    //ReportError::OverrideMismatch(this);
-                    ReportError::InterfaceNotImplemented(this, new Type(implements->Nth(i)->id->name)); 
-                    j = 2000;
-                }
-            }
-        }
-    }
-
-    if (extends) {
-        //members->CheckAll(scopeLevel+1, tracker, extends->id->name);
-    } else {
-        members->CheckAll(scopeLevel+1, tracker);
-    }
-    tracker->UpdateScope(scopeLevel);
-
-}*/

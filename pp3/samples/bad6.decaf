@@ -18,6 +18,6 @@ interface Binkyable
 
 void main()
 {
-	Base b;
-	Derived c;
+    Base b;
+    Derived c;
 }

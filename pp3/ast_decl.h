@@ -19,6 +19,7 @@ class Type;
 class NamedType;
 class Identifier;
 class Stmt;
+class InterfaceDecl;
 
 class Decl : public Node 
 {
@@ -68,8 +69,7 @@ class ClassDecl : public Decl
     ClassDecl(Identifier *name, NamedType *extends, List<NamedType*> *implements, List<Decl*> *members);
 
     void Check();
-    //void Check(int scopeLevel, ScopeTracker *tracker);
-
+    void CheckInterfaceDecls(InterfaceDecl* interfaceClass);
     void CreateTables();
 
 };
@@ -82,7 +82,6 @@ class InterfaceDecl : public Decl
   public:
     InterfaceDecl(Identifier *name, List<Decl*> *members);
     void Check();
-    //void Check(int scopeLevel, ScopeTracker *tracker);
     void CreateTables();
 
 };
@@ -97,11 +96,9 @@ class FnDecl : public Decl
   public:
     FnDecl(Identifier *name, Type *returnType, List<VarDecl*> *formals);
     void SetFunctionBody(Stmt *b);
+    void CheckFunctionSignatures(FnDecl* otherClass);
 
     void Check();
-    //void Check(int scopeLevel, ScopeTracker *tracker);
-/*    void Check(int scopeLevel, ScopeTracker *tracker, char *parentName);
-*/
     void CreateTables();
 
 };
