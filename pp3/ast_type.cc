@@ -66,7 +66,6 @@ void NamedType::Check() {
 }
 
 void NamedType::Check(reasonT whyNeeded) {
-    //printf("Named Check 2-- %s\n",this->id->name);
     Decl *dec;
     Node *p = this;
     while ((p = p->GetParent()) != NULL) {

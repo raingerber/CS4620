@@ -126,6 +126,12 @@ void ArrayAccess::Check() {
     subscript->Check();
 }
 
+void NewArrayExpr::Check() {
+    //printf("NewArrayExpr Check\n");
+    size->Check();
+    elemType->Check();
+}
+
 void FieldAccess::Check() {
     //printf("FieldAccess Check\n");
     if (base) {
@@ -137,7 +143,6 @@ void FieldAccess::Check() {
 
     if (base == NULL) {
         char *fieldName = this->field->name;
-        //printf("%s\n", fieldName);
         if (fieldName != NULL) {
             while ((p = p->GetParent()) != NULL) {
                 if (p->localTable != NULL) {
@@ -145,7 +150,6 @@ void FieldAccess::Check() {
                     while ((dec = iterator.GetNextValue()) != NULL) {
                         if (strcmp(dec->getName(), fieldName) == 0) {
                             return;
-                            //printf("YAHOO YAHOO YAHOO : %s\n", this->field->name);
                         }
                     }
                 }
@@ -192,10 +196,5 @@ void NewExpr::Check() {
     cType->Check();
 }
 
-void NewArrayExpr::Check() {
-    //printf("NewArrayExpr Check\n");
-    size->Check();
-    elemType->Check();
-}
 
        

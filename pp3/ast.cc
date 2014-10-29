@@ -49,7 +49,7 @@ void Identifier::Check() {
 }
 
 void Identifier::Check(reasonT whyNeeded) { 						// DOES NOT ACCOUNT FOR THE TYPE OF THE DECLARATION
-	//printf("id check\n");
+	//printf("id check\n")
 	Decl *dec;
 	Node *p = this;
 	while ((p = p->GetParent()) != NULL) {

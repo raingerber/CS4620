@@ -1,13 +1,13 @@
 class Derived extends Base {
     string field;
     int Method1(int a, double b) {}
-    int Method2(int[] a, Base c, double d) {}
+    //int Method2(int[] a, Base c, double d) {}
 }
 
 class Base implements Binkyable {
     string field2;
     int Method1(int a, double b) {}
-    int Method2(int[] a, Base c) {}
+    //int Method2(int[] a, Base c) {}
     void Method3(bool a) {}
 }
 

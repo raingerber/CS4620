@@ -158,20 +158,19 @@ void FnDecl::CreateTables() {
 /*******************************************************************************************************************************************************/
 
 bool FnDecl::CheckFunctionSignatures(FnDecl* otherClass) {
+
     int f1 = formals->NumElements() || 0,   f2 = otherClass->formals->NumElements() || 0;
     char *s1 = this->returnType->typeName;
     char *s2 = otherClass->returnType->typeName;
-
-    if (s1 != NULL && s2 != NULL && !(strcmp(s1, s2) == 0)) { // && f1 == f2
-        ReportError::OverrideMismatch(this);
+    if (!(strcmp(s1, s2) == 0) || f1 != f2) {
+        ReportError::OverrideMismatch(otherClass);
         return false;
     }
-    if (formals->NumElements())
-
     for (int i = 0; i < formals->NumElements(); i++) {
         s1 = formals->Nth(i)->type->typeName;
         s2 = otherClass->formals->Nth(i)->type->typeName;
         if (s1 != NULL && s2 != NULL && strcmp(s1, s2) != 0) {
+            //printf("TWO TWO TWO\n");
             ReportError::OverrideMismatch(otherClass);
             return false;
         }
@@ -201,7 +200,7 @@ void ClassDecl::CheckInterfaceDecls(InterfaceDecl* interfaceClass) {
             }
         }
         if (!implementsAllOfIt) {
-            ReportError::InterfaceNotImplemented(interfaceClass, new NamedType(this->id));
+            ReportError::InterfaceNotImplemented(this, new NamedType(interfaceClass->id)); //interfaceClass, new NamedType(this->id)
         }
     }
 }
