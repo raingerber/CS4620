@@ -57,11 +57,16 @@ void FnDecl::SetFunctionBody(Stmt *b) {
 
 void CheckInParentClass(Decl* childDecl, ClassDecl* parentClass) {
     //printf("%s %s\n", childDecl->id->name, parentClass->id->name);
+    FnDecl *var1, *var2;
     Decl *d = parentClass->localTable->Lookup(childDecl->id->name);
-    if (d == NULL) {
-        return;
-    } else {
-        ReportError::OverrideMismatch(childDecl);
+    if (d != NULL && (var1 = dynamic_cast<FnDecl*>(childDecl)) != NULL && (var2 = dynamic_cast<FnDecl*>(d))) {
+        if (var1->formals->NumElements() == var2->formals->NumElements()) {
+            for (int i = 0; i<var1->formals->NumElements(); i++) {
+                if (strcmp(var1->formals->Nth(i)->type->typeName, var2->formals->Nth(i)->type->typeName) != 0) {
+                    ReportError::OverrideMismatch(childDecl);
+                }
+            }
+        }
     }
 }
 
@@ -183,7 +188,7 @@ void ClassDecl::CheckInterfaceDecls(InterfaceDecl* interfaceClass) {
             }
         }
         if (!implementsAllOfIt) {
-            ReportError::InterfaceNotImplemented(this, new NamedType(interfaceClass->id));
+            ReportError::InterfaceNotImplemented(interfaceClass, new NamedType(this->id));
         }
     }
 }
@@ -193,10 +198,15 @@ void ClassDecl::Check() {
     //List<Decl*> *extendsList = new List<Decl*>;
     if (extends) {
         ClassDecl* parentClass;
-        extends->Check(LookingForClass);                                        // could return false here if not found
+        extends->Check(LookingForClass);                                          // could return false here if not found
         parentClass = FindParentClass(this, extends->id->name);
         if (parentClass != NULL) {
             for (int i = 0; i < members->NumElements(); i++) {                    // could add another function to list.h
+                FnDecl *childFn = dynamic_cast<FnDecl*>(members->Nth(i));
+                FnDecl *parentFn = dynamic_cast<FnDecl*>(parentClass->localTable->Lookup(members->Nth(i)->id->name));
+                if (childFn != NULL && parentFn != NULL) {
+                    childFn->CheckFunctionSignatures(parentFn); // put this first
+                }
                 members->Nth(i)->Check();
                 CheckInParentClass(members->Nth(i), parentClass);
             }

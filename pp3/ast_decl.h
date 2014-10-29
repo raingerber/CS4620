@@ -81,6 +81,7 @@ class InterfaceDecl : public Decl
     
   public:
     InterfaceDecl(Identifier *name, List<Decl*> *members);
+    void CheckInterfaceDecls(ClassDecl *classDecl);
     void Check();
     void CreateTables();
 
@@ -89,11 +90,12 @@ class InterfaceDecl : public Decl
 class FnDecl : public Decl 
 {
   protected:
-    List<VarDecl*> *formals;
+    
     Type *returnType;
     Stmt *body;
     
   public:
+    List<VarDecl*> *formals;
     FnDecl(Identifier *name, Type *returnType, List<VarDecl*> *formals);
     void SetFunctionBody(Stmt *b);
     bool CheckFunctionSignatures(FnDecl* otherClass);
