@@ -128,12 +128,30 @@ void ArrayAccess::Check() {
 
 void FieldAccess::Check() {
     //printf("FieldAccess Check\n");
-    if (base) base->Check();
+    if (base) {
+        base->Check();
+    }
     //field->Check();
-    Decl *dec, *p;
+    Node *p = this;
+    Decl *dec;
 
-    if (base == NULL) { // find 
-
+    if (base == NULL) {
+        char *fieldName = this->field->name;
+        //printf("%s\n", fieldName);
+        if (fieldName != NULL) {
+            while ((p = p->GetParent()) != NULL) {
+                if (p->localTable != NULL) {
+                    Iterator<Decl*> iterator = p->localTable->GetIterator();
+                    while ((dec = iterator.GetNextValue()) != NULL) {
+                        if (strcmp(dec->getName(), fieldName) == 0) {
+                            return;
+                            //printf("YAHOO YAHOO YAHOO : %s\n", this->field->name);
+                        }
+                    }
+                }
+            }
+        }
+        ReportError::IdentifierNotDeclared(this->field, LookingForVariable);
     } else { // find the identifier
 /*        p = this;
         while ((p = p->GetParent()) != NULL) {
