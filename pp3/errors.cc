@@ -190,15 +190,3 @@ void ReportError::BreakOutsideLoop(BreakStmt *bStmt) {
 void yyerror(const char *msg) {
     ReportError::Formatted(&yylloc, "%s", msg);
 }
-
-
-
-
-
-void ReportError::Custom(Type *ident, char *printname, reasonT whyNeeded) {
-    stringstream s;
-    static const char *names[] =  {"type", "class", "interface", "variable", "function"};
-    Assert(whyNeeded >= 0 && whyNeeded <= sizeof(names)/sizeof(names[0]));
-    s << "No declaration found for "<< names[whyNeeded] << " '" << printname << "'";
-    OutputError(ident->GetLocation(), s.str());
-}

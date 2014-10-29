@@ -96,7 +96,7 @@ class FnDecl : public Decl
   public:
     FnDecl(Identifier *name, Type *returnType, List<VarDecl*> *formals);
     void SetFunctionBody(Stmt *b);
-    void CheckFunctionSignatures(FnDecl* otherClass);
+    bool CheckFunctionSignatures(FnDecl* otherClass);
 
     void Check();
     void CreateTables();

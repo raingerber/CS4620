@@ -105,9 +105,6 @@ class ReportError
 
   // Returns number of error messages printed
   static int NumErrors() { return numErrors; }
-  
-  static void Custom(Type *ident, char *printname, reasonT whyNeeded);
-
 
  private:
 

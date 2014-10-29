@@ -147,20 +147,24 @@ void FnDecl::CreateTables() {
 
 /*******************************************************************************************************************************************************/
 
-void FnDecl::CheckFunctionSignatures(FnDecl* otherClass) {
+bool FnDecl::CheckFunctionSignatures(FnDecl* otherClass) {
     if (!(strcmp(returnType->typeName, otherClass->returnType->typeName) == 0 && formals->NumElements() == otherClass->formals->NumElements())) {
         ReportError::OverrideMismatch(this);
+        return false;
     }
     for (int i = 0; i < formals->NumElements(); i++) {
         if (strcmp(formals->Nth(i)->type->typeName, otherClass->formals->Nth(i)->type->typeName) != 0) {
             ReportError::OverrideMismatch(otherClass);
+            return false;
         }
     }
+    return true;
 }
 
 void ClassDecl::CheckInterfaceDecls(InterfaceDecl* interfaceClass) {
     Decl *dec1, *dec2;
     Iterator<Decl*> iterator = interfaceClass->localTable->GetIterator();
+    bool implementsAllOfIt = true;
     while ((dec1 = iterator.GetNextValue()) != NULL) {
         dec2 = this->localTable->Lookup(dec1->id->name);
         if (dec2 != NULL) {
@@ -169,15 +173,17 @@ void ClassDecl::CheckInterfaceDecls(InterfaceDecl* interfaceClass) {
             if (var1 != NULL && var2 != NULL) {
                 if (strcmp(var1->type->typeName, var2->type->typeName) != 0) {
                     ReportError::DeclConflict(var1, var2);
+                    implementsAllOfIt = false;
                 }
             } else if (dynamic_cast<FnDecl*>(dec1) != NULL && dynamic_cast<FnDecl*>(dec2) != NULL) {
-                dynamic_cast<FnDecl*>(dec1)->CheckFunctionSignatures(dynamic_cast<FnDecl*>(dec2));
+                implementsAllOfIt = implementsAllOfIt && dynamic_cast<FnDecl*>(dec1)->CheckFunctionSignatures(dynamic_cast<FnDecl*>(dec2));
             } else {
                 ReportError::DeclConflict(dec2, dec1);
+                implementsAllOfIt = false;
             }
-        } else {
-            ReportError::InterfaceNotImplemented(this, new Type(interfaceClass->id->name));
-            break;
+        }
+        if (!implementsAllOfIt) {
+            ReportError::InterfaceNotImplemented(this, new NamedType(interfaceClass->id));
         }
     }
 }
