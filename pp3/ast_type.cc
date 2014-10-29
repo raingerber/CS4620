@@ -44,10 +44,28 @@ ArrayType::ArrayType(yyltype loc, Type *et) : Type(loc) {
 /********************************************************************************************************/
 
 void Type::Check() {
+    //printf("Type check %s\n", this->typeName);
+}
+
+void NamedType::Check() {
+    //printf("Named Check 1-- %s\n",this->id->name);
+    Decl *dec;
+    Node *p = this;
+    while ((p = p->GetParent()) != NULL) {
+        if (p->localTable != NULL) {
+            Iterator<Decl*> iterator = p->localTable->GetIterator();
+            while ((dec = iterator.GetNextValue()) != NULL) {
+                if (strcmp(dec->getName(), this->id->name) == 0 && dynamic_cast<ClassDecl*>(dec) != NULL) {
+                    return;
+                }
+            }
+        }
+    }
+    ReportError::IdentifierNotDeclared(this->id, LookingForType);
 }
 
 void NamedType::Check(reasonT whyNeeded) {
-    //printf("Named Check -- %s\n",this->id->name);
+    //printf("Named Check 2-- %s\n",this->id->name);
     Decl *dec;
     Node *p = this;
     while ((p = p->GetParent()) != NULL) {
@@ -81,8 +99,9 @@ void ArrayType::Check() {
             }
         }
     }
-    //ReportError::Custom(this->elemType, this->elemType->typeName, LookingForType);
+    //new NamedType(this->id)// : Type(*i->GetLocation()) {
+    //ReportError::IdentifierNotDeclared(new NamedType(this->id), LookingForType);
 }
 
-
-//static void Custom(Type *ident, char *printname, reasonT whyNeeded);
+//Identifier::Identifier(yyltype loc, const char *n) : Node(loc)
+//Identifier(yyltype loc, const char *n)

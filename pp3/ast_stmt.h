@@ -28,7 +28,6 @@ class Program : public Node
   public:
      Program(List<Decl*> *declList);
      void CreateTables();
-     //void Check(int scopeLevel, ScopeTracker *tracker);
      void Check();
 
 };
@@ -54,7 +53,6 @@ class StmtBlock : public Stmt
   public:
     StmtBlock(List<VarDecl*> *variableDeclarations, List<Stmt*> *statements);
     void Check();
-    //void Check(int scopeLevel, ScopeTracker *tracker);
     void CreateTables();
 };
 
@@ -85,7 +83,6 @@ class ForStmt : public LoopStmt
   public:
     ForStmt(Expr *init, Expr *test, Expr *step, Stmt *body);
     void Check();
-    //void Check(int scopeLevel, ScopeTracker *tracker);
 };
 
 class WhileStmt : public LoopStmt 
@@ -93,7 +90,6 @@ class WhileStmt : public LoopStmt
   public:
     WhileStmt(Expr *test, Stmt *body);// : LoopStmt(test, body) {printf("library\n");}
     void Check();
-    //void Check(int scopeLevel, ScopeTracker *tracker);
 };
 
 class IfStmt : public ConditionalStmt 
@@ -104,7 +100,6 @@ class IfStmt : public ConditionalStmt
   public:
     IfStmt(Expr *test, Stmt *thenBody, Stmt *elseBody);
     void Check();
-    //void Check(int scopeLevel, ScopeTracker *tracker);
     void CreateTables();
 };
  
@@ -113,7 +108,6 @@ class BreakStmt : public Stmt
   public:
     BreakStmt(yyltype loc) : Stmt(loc) {}
     void Check();
-    //void Check(int scopeLevel, ScopeTracker *tracker);
 };
 
 class ReturnStmt : public Stmt  
@@ -124,7 +118,6 @@ class ReturnStmt : public Stmt
   public:
     ReturnStmt(yyltype loc, Expr *expr);
     void Check();
-    //void Check(int scopeLevel, ScopeTracker *tracker);
 };
 
 class PrintStmt : public Stmt
@@ -135,7 +128,6 @@ class PrintStmt : public Stmt
   public:
     PrintStmt(List<Expr*> *arguments);
     void Check();
-    //void Check(int scopeLevel, ScopeTracker *tracker);
 };
 
 
@@ -144,7 +136,6 @@ class CaseStmt : public ConditionalStmt
   public:
     CaseStmt(Expr *testExpr, Stmt *body) : ConditionalStmt(testExpr, body) {}
     void Check();
-    //void Check(int scopeLevel, ScopeTracker *tracker);
 };
 /*
 

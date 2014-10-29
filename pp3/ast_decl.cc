@@ -59,16 +59,16 @@ void CheckInParentClass(Decl* childDecl, ClassDecl* parentClass) {
     //printf("Decl: %s, Class: %s\n", childDecl->id->name, parentClass->id->name);
     FnDecl *var1, *var2;
     Decl *dec = parentClass->localTable->Lookup(childDecl->id->name);
-    if (dec != NULL && (var1 = dynamic_cast<FnDecl*>(childDecl)) != NULL && (var2 = dynamic_cast<FnDecl*>(dec))) {
+/*    if (dec != NULL && (var1 = dynamic_cast<FnDecl*>(childDecl)) != NULL && (var2 = dynamic_cast<FnDecl*>(dec))) {
         if (var1->formals->NumElements() == var2->formals->NumElements()) {
             for (int i = 0; i<var1->formals->NumElements(); i++) {
                 if (strcmp(var1->formals->Nth(i)->type->typeName, var2->formals->Nth(i)->type->typeName) != 0) {
                     ReportError::OverrideMismatch(childDecl);
                 }
             }
-        }
-    } else if (strcmp(dec->id->name, childDecl->id->name) == 0) {
-        ReportError::DeclConflict(dec, childDecl);
+        }*/
+    if (dec != NULL) {
+        ReportError::DeclConflict(childDecl, dec);
     }
 }
 
@@ -109,6 +109,7 @@ InterfaceDecl* FindInterface(Decl *childNode, char *extendsName) {
 }
 
 void VarDecl::Check() {
+    //printf("vardecl check\n");
     type->Check();
     CheckForDeclConflict(this);
 }
@@ -122,10 +123,12 @@ void VarDecl::CreateTables() {
 /*******************************************************************************************************************************************************/
 
 void FnDecl::Check() {
+    returnType->Check();
     CheckForDeclConflict(this);
     if (formals) {
         int j;
         for (int i=0; i < formals->NumElements(); i++) {
+            //printf("fndecl check\n");
             formals->Nth(i)->type->Check();
             for (j = i - 1; j >= 0; j--) {
                 if (strcmp(formals->Nth(i)->id->name, formals->Nth(j)->id->name) == 0) {
@@ -209,9 +212,10 @@ void ClassDecl::Check() {
                 FnDecl *parentFn = dynamic_cast<FnDecl*>(parentClass->localTable->Lookup(members->Nth(i)->getName()));
                 if (childFn != NULL && parentFn != NULL) {
                     childFn->CheckFunctionSignatures(parentFn);
+                } else {
+                    members->Nth(i)->Check();
+                    CheckInParentClass(members->Nth(i), parentClass);
                 }
-                members->Nth(i)->Check();
-                CheckInParentClass(members->Nth(i), parentClass);
             }
         }
     } else {

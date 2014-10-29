@@ -36,9 +36,6 @@ class Decl : public Node
 
     virtual void Check() {printf("default gal\n");}
     //virtual void Check() {printf("default decl table\n");}
-    //virtual void Check(int scopeLevel, ScopeTracker *tracker) {}
-/*    virtual void Check(int scopeLevel, ScopeTracker *tracker, char *parentName) {}
-*/
 };
 
 class VarDecl : public Decl 
@@ -51,9 +48,6 @@ class VarDecl : public Decl
     VarDecl(Identifier *name, Type *type);
 
     void Check();
-    //void Check(int scopeLevel, ScopeTracker *tracker);
-/*    void Check(int scopeLevel, ScopeTracker *tracker, char *parentName);
-*/
     void CreateTables();
 
 };

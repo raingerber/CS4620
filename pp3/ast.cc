@@ -32,32 +32,34 @@ void Identifier::CreateTables() {
 }
 
 void Identifier::Check() {
-	//printf("Normal Identifier Check\n");
-}
-
-void Identifier::Check(reasonT whyNeeded) { 						// DOES NOT ACCOUNT FOR THE TYPE OF THE DECLARATION
-
+	//printf("Normal Identifier Check %s\n", this->name);
 	Decl *dec;
 	Node *p = this;
 	while ((p = p->GetParent()) != NULL) {
-		Iterator<Decl*> iterator = p->localTable->GetIterator();
-	    while ((dec = iterator.GetNextValue()) != NULL) {
-	        if (strcmp(dec->getName(), this->name) == 0) {
-	        	return;
-	        }
-	    }	
+		if (p->localTable != NULL) {
+			Iterator<Decl*> iterator = p->localTable->GetIterator();
+		    while ((dec = iterator.GetNextValue()) != NULL) {
+		        if (strcmp(dec->getName(), this->name) == 0) {
+		        	return;
+		        }
+		    }	
+		}
+	}
+	ReportError::IdentifierNotDeclared(this, LookingForVariable);
+}
+
+void Identifier::Check(reasonT whyNeeded) { 						// DOES NOT ACCOUNT FOR THE TYPE OF THE DECLARATION
+	Decl *dec;
+	Node *p = this;
+	while ((p = p->GetParent()) != NULL) {
+		if (p->localTable != NULL) {
+			Iterator<Decl*> iterator = p->localTable->GetIterator();
+		    while ((dec = iterator.GetNextValue()) != NULL) {
+		        if (strcmp(dec->getName(), this->name) == 0) {
+		        	return;
+		        }
+		    }
+		}
 	}
 	ReportError::IdentifierNotDeclared(this, whyNeeded);
 }
-
-/*void Identifier::Check(int scopeLevel, ScopeTracker *tracker) {
-	tracker->IdentifierCheck(scopeLevel, this->name, this, LookingForVariable);
-}
-
-void Identifier::CheckNamedType(int scopeLevel, ScopeTracker *tracker) {
-	tracker->IdentifierCheck(scopeLevel, this->name, this, LookingForInterface);
-}
-
-void Identifier::CheckExtends(int scopeLevel, ScopeTracker *tracker) {
-	tracker->IdentifierCheck(scopeLevel, this->name, this, LookingForClass);
-}*/

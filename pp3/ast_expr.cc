@@ -94,58 +94,58 @@ NewArrayExpr::NewArrayExpr(yyltype loc, Expr *sz, Type *et) : Expr(loc) {
 /********************************************************************************************************/
 
 void IntConstant::Check() {
-    printf("IntConstant\n");
+    //printf("IntConstant\n");
 }
 
 void DoubleConstant::Check() {
-    printf("DoubleConstant\n");
+    //printf("DoubleConstant\n");
 }
 
 void BoolConstant::Check() {
-    printf("BoolConstant\n");
+    //printf("BoolConstant\n");
 }
 
 void StringConstant::Check() {
-    printf("StringConstant\n");
+    //printf("StringConstant\n");
 }
 
 void Operator::Check() {
-    printf("Operator\n");
+    //printf("Operator\n");
 }
 
 void CompoundExpr::Check() {
-    printf("CompoundExpr Check\n");
+    //printf("CompoundExpr Check\n");
     if (left) left->Check();
     op->Check();
     if (right) right->Check();
 }
 
 void ArrayAccess::Check() {
-    printf("ArrayAccess Check\n");
+    //printf("ArrayAccess Check\n");
     base->Check();
     subscript->Check();
 }
 
 void FieldAccess::Check() {
-    printf("FieldAccess Check\n");
+    //printf("FieldAccess Check\n");
     if (base) base->Check();
     field->Check();
 }
 
 void Call::Check() {
-    printf("Call Check\n");
+    //printf("Call Check\n");
     if (base) base->Check();
     field->Check();
     actuals->CheckAll();
 }
 
 void NewExpr::Check() {
-    printf("NewExpr Check\n");
-    //cType->Check();
+    //printf("NewExpr Check\n");
+    cType->Check();
 }
 
 void NewArrayExpr::Check() {
-    printf("NewArrayExpr Check\n");
+    //printf("NewArrayExpr Check\n");
     size->Check();
     elemType->Check();
 }

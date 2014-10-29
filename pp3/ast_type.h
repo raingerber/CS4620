@@ -52,7 +52,8 @@ class NamedType : public Type
     NamedType(Identifier *i);
     
     void PrintToStream(std::ostream& out) { out << id; }
-
+    
+    void Check();
     void Check(reasonT whyNeeded);
     //void Check(int scopeLevel, ScopeTracker *tracker);
     //void CheckExtends(int scopeLevel, ScopeTracker *tracker);
