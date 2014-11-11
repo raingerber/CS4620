@@ -1,0 +1,11 @@
+class Club {
+   void Meet() { FindTime(); }
+}
+int plus() {}
+int tb;
+void main() {
+   Club tbc;
+   nico = trish + katie;
+   cheryl();
+   tbc.Meeting(caroline);
+}

@@ -1,0 +1,118 @@
+#!/bin/sh
+
+echo "#####################################################"
+./solution/dcc < samples/new.decaf 2> a
+         ./dcc < samples/new.decaf 2> b
+diff a b
+echo "#####################################################"
+./solution/dcc < samples/stack.decaf 2> a
+         ./dcc < samples/stack.decaf 2> b
+diff a b
+echo "#####################################################"
+./solution/dcc < samples/queue.decaf 2> a
+         ./dcc < samples/queue.decaf 2> b
+diff a b
+
+echo "#####################################################"
+./solution/dcc < samples/t1.decaf 2> a
+         ./dcc < samples/t1.decaf 2> b
+diff a b
+echo "#####################################################"
+./solution/dcc < samples/t2.decaf 2> a
+         ./dcc < samples/t2.decaf 2> b
+diff a b
+echo "#####################################################"
+./solution/dcc < samples/t3.decaf 2> a
+         ./dcc < samples/t3.decaf 2> b
+diff a b
+echo "#####################################################"
+./solution/dcc < samples/t4.decaf 2> a
+         ./dcc < samples/t4.decaf 2> b
+diff a b
+echo "#####################################################"
+./solution/dcc < samples/t5.decaf 2> a
+         ./dcc < samples/t5.decaf 2> b
+diff a b
+echo "#####################################################"
+./solution/dcc < samples/t6.decaf 2> a
+         ./dcc < samples/t6.decaf 2> b
+diff a b
+echo "#####################################################"
+./solution/dcc < samples/t7.decaf 2> a
+         ./dcc < samples/t7.decaf 2> b
+diff a b
+echo "#####################################################"
+./solution/dcc < samples/t12.decaf 2> a
+         ./dcc < samples/t12.decaf 2> b
+diff -y a b
+echo "#####################################################"
+./solution/dcc < samples/bad1.decaf 2> a
+         ./dcc < samples/bad1.decaf 2> b
+diff a b
+echo "#####################################################"
+./solution/dcc < samples/bad2.decaf 2> a
+         ./dcc < samples/bad2.decaf 2> b
+diff a b
+echo "#####################################################"
+./solution/dcc < samples/bad3.decaf 2> a
+         ./dcc < samples/bad3.decaf 2> b
+diff a b
+echo "#####################################################"
+./solution/dcc < samples/bad4.decaf 2> a
+         ./dcc < samples/bad4.decaf 2> b
+diff a b
+echo "#####################################################"
+./solution/dcc < samples/bad5.decaf 2> a
+         ./dcc < samples/bad5.decaf 2> b
+diff a b
+echo "#####################################################"
+./solution/dcc < samples/bad6.decaf 2> a
+         ./dcc < samples/bad6.decaf 2> b
+diff a b
+echo "#####################################################"
+./solution/dcc < samples/bad7.decaf 2> a
+         ./dcc < samples/bad7.decaf 2> b
+diff a b
+echo "#####################################################"
+./solution/dcc < samples/bad9.decaf 2> a
+         ./dcc < samples/bad9.decaf 2> b
+diff a b
+
+echo "#####################################################"
+./solution/dcc < samples/bad11.decaf 2> a
+         ./dcc < samples/bad11.decaf 2> b
+diff a b
+echo "#####################################################"
+./solution/dcc < samples/bad12.decaf 2> a
+         ./dcc < samples/bad12.decaf 2> b
+diff a b
+echo "#####################################################"
+./solution/dcc < samples/t9.decaf 2> a
+         ./dcc < samples/t9.decaf 2> b
+diff a b
+echo "#####################################################"
+./solution/dcc < samples/t10.decaf 2> a
+         ./dcc < samples/t10.decaf 2> b
+diff a b
+echo "#####################################################"
+./solution/dcc < samples/t13.decaf 2> a
+         ./dcc < samples/t13.decaf 2> b
+diff a b
+echo "#################################################"
+echo "#####################################################"
+echo "#####################################################"
+./solution/dcc < me.decaf 2> a
+         ./dcc < me.decaf 2> b
+diff a b
+echo "#####################################################"
+./solution/dcc < samples/matrix.decaf 2> a
+         ./dcc < samples/matrix.decaf 2> b
+diff a b
+echo "#####################################################"
+./solution/dcc < samples/bad8.decaf 2> a
+         ./dcc < samples/bad8.decaf 2> b
+diff a b
+echo "#####################################################"
+./solution/dcc < samples/bad10.decaf 2> a
+         ./dcc < samples/bad10.decaf 2> b
+diff a b
