@@ -1,0 +1,35 @@
+int func(int b, int a) {
+	return 4;
+}
+
+string yes() {
+	return "str";
+}
+
+void main() {
+	string str1;
+	string str2;
+	str1 = "str";
+	str2 = "str";
+
+	if (true) {
+		int i;
+		i = 3;
+		Print(i);
+	}
+
+	if (8 == 8) Print("Eight\n");
+
+	if (str1 == str2) Print("One\n");
+
+	if ("yes" == "yes") Print("Two\n");
+
+	if (str1 == "yes") Print("Three\n");
+
+	if ("yes" == str2) Print("Four\n");
+
+	if (str1 == yes()) Print("Five\n");
+
+
+}
+
